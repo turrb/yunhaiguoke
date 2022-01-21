@@ -30,7 +30,7 @@ $("#form_reg").on("submit", function (e) {
     password: $("#form_reg [name=password]").val(),
     repassword: $("#form_reg [name=repassword]").val(),
   };
-  $.post("http://www.liulongbin.top:3008/api/reg", data, function (res) {
+  $.post("/api/reg", data, function (res) {
     //通过ajax的post请求发送到后台验证是否存在重复注册
     if (res.code === 0) {
       //判断成功后的返回值
@@ -47,7 +47,7 @@ $("#form_login").submit(function (e) {
   e.preventDefault(); //阻止表单默认提交行为
   $.ajax({
     method: "POST",
-    url: "http://www.liulongbin.top:3008/api/login",
+    url: "/api/login",
     data: $(this).serialize(),//快速获取表单数据
     success: function (res) {
       if (res.code !== 0) {
