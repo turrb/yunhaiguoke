@@ -21,18 +21,41 @@ form.verify({
   },
 });
 
-$("#form_reg").on("submit", function (e) {//监听表单提交事件
-  e.preventDefault();//阻止表单默认提交行为
+var layer = layui.layer; //弹出层模块 
+//监听注册表单提交事件
+$("#form_reg").on("submit", function (e) {
+  e.preventDefault(); //阻止表单默认提交行为
   var data = {
-    username: $("#form_reg [name=username]").val(),//将用户输入的注册表单内的数据保存起来
+    username: $("#form_reg [name=username]").val(), //将用户输入的注册表单内的数据保存起来
     password: $("#form_reg [name=password]").val(),
     repassword: $("#form_reg [name=repassword]").val(),
   };
-  $.post("http://www.liulongbin.top:3008/api/reg", data, function (res) {//通过ajax的post请求发送到后台验证是否存在重复注册
-    if (res.code === 0) {//判断成功后的返回值
-      console.log("注册成功");
-    }else{
-      console.log(res.message);
+  $.post("http://www.liulongbin.top:3008/api/reg", data, function (res) {
+    //通过ajax的post请求发送到后台验证是否存在重复注册
+    if (res.code === 0) {
+      //判断成功后的返回值
+      layer.msg("注册成功,请登录");
+      $("#link_login").click();
+    } else {
+      layer.msg(res.message);
     }
+  });
+});
+
+//监听登录表单提交事件
+$("#form_login").submit(function (e) {
+  e.preventDefault(); //阻止表单默认提交行为
+  $.ajax({
+    method: "POST",
+    url: "http://www.liulongbin.top:3008/api/login",
+    data: $(this).serialize(),//快速获取表单数据
+    success: function (res) {
+      if (res.code !== 0) {
+        return layer.msg(res.message);
+      } else {
+        localStorage.setItem("token", res.token);//将token值保存到本地
+        location.href = "../../index.html";//登录成功后的跳转页面
+      }
+    },
   });
 });
